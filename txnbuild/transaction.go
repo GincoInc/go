@@ -81,6 +81,10 @@ func (tx *Transaction) SetDefaultFee() {
 	}
 }
 
+func (tx *Transaction) SetSignatures(signatures []xdr.DecoratedSignature) {
+	tx.xdrEnvelope.Signatures = signatures
+}
+
 // Build for Transaction completely configures the Transaction. After calling Build,
 // the Transaction is ready to be serialised or signed.
 func (tx *Transaction) Build() error {
@@ -123,6 +127,10 @@ func (tx *Transaction) Build() error {
 	// Set a default fee, if it hasn't been set yet
 	tx.SetDefaultFee()
 
+	if tx.xdrEnvelope == nil {
+		tx.xdrEnvelope = &xdr.TransactionEnvelope{}
+		tx.xdrEnvelope.Tx = tx.xdrTransaction
+	}
 	return nil
 }
 
